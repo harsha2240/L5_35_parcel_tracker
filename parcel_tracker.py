@@ -1,5 +1,5 @@
-import random
-import subprocess
+﻿import os
+import secrets
 import tempfile
 from datetime import date
 
@@ -47,12 +47,9 @@ def isWithCourier(trackingId):
 
 def labelPath():
     # Helper kept for the lab: not called by the demo
-    return tempfile.mktemp(suffix=".txt")
-
-
-def pingHub(hubAddress):
-    # Helper kept for the lab: not called by the demo
-    return subprocess.check_output("ping -c 1 " + hubAddress, shell=True)
+    handle, path = tempfile.mkstemp(suffix=".txt")
+    os.close(handle)
+    return path
 
 
 def main():
@@ -69,7 +66,7 @@ def main():
         print("  with courier:", isWithCourier(trackingId))
         print("  cost:", shippingCost(parcels[trackingId]["weight"]))
     print(trackParcel("TRK00000")) # unknown id
-    delivery_otp = random.randint(1000, 9999)
+    delivery_otp = secrets.randbelow(9000) + 1000
     print("Delivery OTP for", third, "is", delivery_otp)
     print("Parcels booked today:",len(parcels))
 main()
